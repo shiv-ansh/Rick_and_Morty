@@ -12,7 +12,7 @@ function Pagination(props) {
     }
     return (
         <nav >
-            <ul className="pagination pagination-sm">
+            <ul className="pagination pagination-md">
                 {pages.map(ele => (<li key={ele} className="page-item"><button className="page-link" onClick={() => props.handleClick(ele)}>{ele}</button></li>))
 
 

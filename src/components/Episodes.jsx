@@ -12,7 +12,8 @@ export class Episodes extends Component {
 
         this.state = {
             episodes: [],
-            pages: 0
+            pages: 0,
+            search: ""
         }
 
 
@@ -46,19 +47,71 @@ export class Episodes extends Component {
                 })
             })
             .catch((error) => console.log(error))
+    }
 
+    //handleChange function to handle episode search
+    handleChange = (event) => {
+        this.setState({
+            search: event.target.value
+        })
+    }
 
+    //fetching user entered episodes
+    filterEpisodes = () => {
+        axios.get(`https://rickandmortyapi.com/api/episode/?name=${this.state.search}`)
+            .then((res) => res.data)
+            .then((res) => {
+                this.setState({
+                    episodes: res.results,
+                    pages: res.info.pages
+                })
+            })
+            .catch((error) => alert("Invalid Episode Name, Please Retype!!!"))
 
+        this.reset();
+    }
+
+    //reset search function
+    reset = () => {
+        this.setState({
+            search: ""
+        })
     }
     render() {
         console.log(this.state);
         return (
             <div className="container">
-                <Pagination
-                    pages={this.state.pages}
-                    handleClick={(ele) => this.handleClick(ele)}
-                />
-                <table className="table">
+                <h1 className="text-center text-dark mx-5 display-4">All Episodes</h1>
+                <hr />
+                <div className="row className">
+                    <div className="col-12 col-md-6">
+                        <Pagination
+                            pages={this.state.pages}
+                            handleClick={(ele) => this.handleClick(ele)}
+                        />
+                    </div>
+                    <div className="col-12 col-md-6">
+                        <div className="form-inline my-2 my-lg-0">
+                            <input
+                                className="form-control mr-sm-2"
+                                type="text"
+                                placeholder="Episodes Name"
+                                aria-label="Search"
+                                onChange={this.handleChange}
+                                value={this.state.search}
+                            />
+                            <button
+                                className="btn btn-outline-info my-2 my-sm-0"
+                                type="submit"
+                                onClick={() => this.filterEpisodes()}
+                            >
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <table className="table table-striped">
                     <thead className="thead-dark">
                         <tr>
                             <th scope="col">Name</th>
